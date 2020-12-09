@@ -1,16 +1,29 @@
 Package: sleepapp 
-Title: What the Package Does (One Line, Title Case)
+Title: A shiny application to explore the Dopp et al. 2021 dataset
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "Antonio",
+           family = "Ortega",
            role = c("aut", "cre"),
-           email = "first.last@example.com",
+           email = "antonio.ortega@kuleuven.be",
            comment = c(ORCID = "YOUR-ORCID-ID"))
 Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to
-    pick a license
+License: use_gpl3_license()
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.1.9000
+Imports:
+   shiny,
+   shinydashboard,
+   shinydashboardPlus,
+   shinybusy,
+   data.table,
+   glue,
+   ggplot2,
+   ggrepel,
+   SingleCellExperiment,
+   scuttle,
+   stringr,
+   dplyr,
+   magrittr
