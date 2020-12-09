@@ -1,16 +1,13 @@
 plotUI <- function(id, modules="*", helper_text="Help text") {
   
-  cell_types <- list(
-    "γ KC" = "y_KCs",
-    "αβ KC" = "a_b_KCs",
-    "α'β' KC" = "a_b_prime_KCs",
-    "Astrocytes" = "Astrocytes",
-    "Ensheathing Glia" = "Ensheathing glia",
-    "Surface Glia" = "Surface glia"
-  )
+  config <- SleepAppConfiguration$new()$content
   
+  cell_types <- config$cell_types
+  assays_available <- config$assays_available
+  comparisons_available <- config$comparisons_available
+  groupings_available <- config$groupings_available
+  methods_available <- config$methods_available
   
-  comparisons <- gsub(x = list.files("../comparisons/"), pattern = "\\.csv", replacement = "")
   ns <- shiny::NS(id)
   
   if (getOption("shiny.debug")) browser()
@@ -20,23 +17,23 @@ plotUI <- function(id, modules="*", helper_text="Help text") {
                                    multiple = FALSE
     )
     , grouping = shiny::radioButtons(ns("grouping"), label = "Grouping",
-                                     choices = c("Condition", "quick_clusters"),
+                                     choices = groupings_available,
                                      selected = "Condition", inline = TRUE
     )
     , assay = shiny::radioButtons(ns("assay"), label = "Assay",
-                                  choices = c("counts", "normcounts", "logcounts"),
+                                  choices = assays_available,
                                   selected = "counts", inline = TRUE
     )
     , comparison_file = shiny::selectInput(ns("comparison_file"), label = "Comparison",
-                                           choices = comparisons,
-                                           selected = comparisons[1]
+                                           choices = comparisons_available,
+                                           selected = comparisons_available[1]
     )
     , geom = shiny::radioButtons(ns("geom"), label = "Plot",
                                  choices = c("density", "histogram"),
                                  selected = "histogram", inline=TRUE
     )
     , method = shiny::radioButtons(ns("method"), label = "DE Method",
-                                   choices = c("edgeR", "DESeq", "Wilcoxon", "MAST", "scvi"),
+                                   choices = methods_available,
                                    selected = "Wilcoxon", inline=TRUE)
     
     , gene = shiny::textInput(ns("gene"), label = "Gene", value = "", placeholder = "Act5C")

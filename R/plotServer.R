@@ -55,14 +55,44 @@ plotHistogramServer <- function(id) {
   )
 }
 
-readMethods <- list(
-  MAST = readMAST,
-  edgeR = readEdgeR,
-  DESeq = readDESeq,
-  Wilcoxon = readWilcoxon,
-  scvi = readSCVI_change
-  
-)
+#'
+plotVennServer <- function(id) {
+  shiny::moduleServer(
+    id,
+    function(input, output, session) {
+      
+      data_list_list <- eventReactive(input$submit, {
+        abs_dir <- SleepAppConfiguration$new()$content$abs_dir
+        
+        groups <- paste0("group", 1:3) %>% lapply(., function(g) {
+          input[[g]] %>% sapply(., function(x) file.path(abs_dir, x))
+          
+        })
+        names(groups) <- c(input$name1, input$name2, input$name3)
+        groups
+      })
+      
+      observeEvent(input$submit, {
+        data_list_list()
+      })
+      
+      output$text <- renderText({
+        ensembles <- computeGeneEnsembles(computePartitionCounts(data_list_list()), names(data_list_list()))
+        text <- lapply(
+          1:length(ensembles), function(i) {
+            paste0("<b>", names(ensembles)[i], "</b>", ":", ensembles[i])
+          }
+        ) %>% unlist %>% paste(., collapse = "<br>")
+        
+        text
+      })
+      
+      output$plot <- renderPlot({
+        plotVenn(data_list_list(), sign=input$sign, effect.size_threshold = input$es.thresh, signif_threshold=input$sig.thresh)
+      })
+    }
+  )
+}
 
 #' @import rlang
 plotVolcanoServer <- function(id) {
@@ -88,7 +118,7 @@ plotVolcanoServer <- function(id) {
       
       diff_table <- reactive({
         if (getOption("shiny.debug")) browser()
-        readMethods[[input$method]](diff_table_path())
+        read_methods[[input$method]](diff_table_path())
       })
       
       genes_char <- reactive({

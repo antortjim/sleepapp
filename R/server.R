@@ -3,5 +3,6 @@ server <- function(input, output, session) {
   
   plotHistogramServer("histogram")
   plotVolcanoServer("volcano")
+  plotVennServer("venn")
   
 }

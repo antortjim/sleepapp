@@ -14,7 +14,8 @@ SleepAppConfiguration <- R6::R6Class(classname = "FSLREthoConfiguration", public
   
   content = list(),
   config_file = "",
-  
+
+
   initialize = function(config_file = "/etc/fslretho.conf") {
     
     content <- list("debug" = TRUE, "ncores" = 2, "stop_backups" = TRUE, port = 3838)
@@ -33,10 +34,25 @@ SleepAppConfiguration <- R6::R6Class(classname = "FSLREthoConfiguration", public
       )
     )
     self$config_file <- config_file
+    content$content <- content
+    # content$read_methods = read_methods
+    content$cell_types <- list(
+      "γ KC" = "y_KCs",
+      "αβ KC" = "a_b_KCs",
+      "α'β' KC" = "a_b_prime_KCs",
+      "Astrocytes" = "Astrocytes",
+      "Ensheathing Glia" = "Ensheathing_Glia",
+      "Surface Glia" = "Surface_Glia"
+    )
+    content$comparisons_available = gsub(x = list.files("../comparisons/"), pattern = "\\.csv", replacement = "")
+    content$methods_available = names(read_methods)
+    content$assays_available = c("counts", "normcounts", "logcounts")
+    content$groupings_available = c("Condition", "quick_clusters")
+    content$root_dir = "/1TB/Cloud/Lab/Projects/SleepSignature/workflow/"
+    content$working_dir = "results/20201209/"
+    content$abs_dir <- file.path(content$root_dir, content$working_dir)
     self$content <- content
-    
     self$load()
-    
   },
   
   save = function(config_file = NULL) {

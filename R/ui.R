@@ -24,6 +24,7 @@ shinydashboard_ui <- function() {
         shinydashboard::sidebarMenu(
           shinydashboard::menuItem("Welcome", tabName = 'welcome', icon = shiny::icon('info'))
           , shinydashboard::menuItem("Plots", tabName = 'plots', icon = shiny::icon('upload'))
+          , shinydashboard::menuItem("Venn", tabName = 'venn')
         )
       ),
       # TODO Place somewhere the UI for scoreData
@@ -39,7 +40,8 @@ shinydashboard_ui <- function() {
             , plotUI("volcano", modules = c("*"),
                      helper_text = helper_text[["volcano"]])
             , numericInput("volcano-labels", label = "# Labels", min = 0, max=Inf, step = 1, value=0))
-          )
+          ),
+          shinydashboard::tabItem(tabName = "venn", plotVennUI("venn"))
         )
       )
   )

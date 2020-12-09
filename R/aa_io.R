@@ -5,12 +5,16 @@
 #' 
 #' @importFrom data.table fread
 #' @importFrom dplyr arrange
-readMAST <- function(path, signif_threshold=0.05) {
+readMAST <- function(path, signif_threshold=0.05, only_signif=FALSE) {
   diff_table <- data.table::fread(file = path)
   diff_table <- diff_table[, c("Gene", "Coefficient", "Probability (Chisq)", "FDR (Adj-pval)")]
   colnames(diff_table) <- c("Gene", "effect.size", "significance", "corrected.significance")
   diff_table$signif <- diff_table$corrected.significance < signif_threshold
   diff_table <- dplyr::arrange(diff_table, corrected.significance)
+  
+  if (only_signif) {
+    diff_table <- diff_table[diff_table$signif,]
+  }
   
   return(diff_table)
 }
@@ -18,14 +22,17 @@ readMAST <- function(path, signif_threshold=0.05) {
 
 #' @importFrom data.table fread
 #' @importFrom dplyr arrange
-readWilcoxon <- function(path, signif_threshold=0.05) {
+readWilcoxon <- function(path, signif_threshold=0.05, only_signif=FALSE) {
   
   diff_table <- data.table::fread(file = path)
-  if (getOption("shiny.debug")) browser()
   diff_table <- diff_table[, c("genes", "logFC", "PValue", "PValue_adj")]
   colnames(diff_table) <- c("Gene", "effect.size", "significance", "corrected.significance")
   diff_table$signif <- diff_table$corrected.significance < signif_threshold
   diff_table <- dplyr::arrange(diff_table, corrected.significance)
+  
+  if (only_signif) {
+    diff_table <- diff_table[diff_table$signif,]
+  }
   
   return(diff_table) 
 }
@@ -39,7 +46,7 @@ readWilcoxon <- function(path, signif_threshold=0.05) {
 #' 
 #' @importFrom data.table fread
 #' @importFrom dplyr arrange
-readEdgeR <- function(path, signif_threshold=NULL) {
+readEdgeR <- function(path, signif_threshold=NULL, only_signif=FALSE) {
   
   diff_table <- data.table::fread(file = path)
   diff_table <- diff_table[, c("gene", "logFC", "PValue", "PValue", "direction")]
@@ -48,12 +55,16 @@ readEdgeR <- function(path, signif_threshold=NULL) {
   diff_table$direction <- NULL
   diff_table <- dplyr::arrange(diff_table, corrected.significance)
   
+  if (only_signif) {
+    diff_table <- diff_table[diff_table$signif,]
+  }
+  
   return(diff_table) 
 }
 
 #' @importFrom data.table fread
 #' @importFrom dplyr arrange
-readDESeq <- function(path, signif_threshold=0.05) {
+readDESeq <- function(path, signif_threshold=0.05, only_signif=FALSE) {
 
   diff_table <- data.table::fread(file = path)
   diff_table <- diff_table[, c("gene", "log2FoldChange", "pvalue", "padj")]
@@ -61,29 +72,49 @@ readDESeq <- function(path, signif_threshold=0.05) {
   diff_table$signif <- diff_table$corrected.significance < signif_threshold
   diff_table <- dplyr::arrange(diff_table, corrected.significance)
   
+  if (only_signif) {
+    diff_table <- diff_table[diff_table$signif,]
+  }
+  
   return(diff_table) 
 }
 
 
-readSCVI_vanilla <- function(path, signif_threshold=0.05) {
+readSCVI_vanilla <- function(path, signif_threshold=0.05, only_signif=FALSE) {
   diff_table <- data.table::fread(file=path)
   diff_table <- diff_table[, c("Gene", "log_scale_ratio", "abs_bayes_factor", "abs_bayes_factor")]
   colnames(diff_table) <- c("Gene", "effect.size", "significance", "corrected.significance")
   diff_table$signif <- diff_table$corrected.significance < signif_threshold
   diff_table <- dplyr::arrange(diff_table, corrected.significance)
   
+  if (only_signif) {
+    diff_table <- diff_table[diff_table$signif,]
+  }
+  
   return(diff_table) 
   
 }
 
 
-readSCVI_change <- function(path, signif_threshold=0.05) {
+readSCVI_change <- function(path, signif_threshold=0.05, only_signif=FALSE) {
   diff_table <- data.table::fread(file=path)
   diff_table <- diff_table[, c("Gene", "lfc_median", "proba_not_de", "proba_not_de")]
   colnames(diff_table) <- c("Gene", "effect.size", "significance", "corrected.significance")
   diff_table$signif <- diff_table$corrected.significance < signif_threshold
   diff_table <- dplyr::arrange(diff_table, corrected.significance)
   
-  return(diff_table) 
+  if (only_signif) {
+    diff_table <- diff_table[diff_table$signif,]
+  } 
   
+  return(diff_table) 
 }
+
+read_methods <- list(
+  MAST = readMAST,
+  edgeR = readEdgeR,
+  DESeq = readDESeq,
+  Wilcoxon = readWilcoxon,
+  scvi = readSCVI_change
+  
+)

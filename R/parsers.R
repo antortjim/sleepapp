@@ -3,7 +3,8 @@
 #' Given a path, parse the method it belongs to
 #'  @import magrittr
 parseMethod <- function(path) {
-  c("MAST", "DESeq", "edgeR", "Wilcoxon") %>% sapply(function(p) grep(pattern = p, x = path, value = TRUE)) %>% unlist %>% names
+  
+  names(read_methods) %>% sapply(function(p) grep(pattern = p, x = path, value = TRUE)) %>% unlist %>% names
 }
 
 #' Given a path, parse the comparison it belongs to

@@ -26,4 +26,5 @@ Imports:
    scuttle,
    stringr,
    dplyr,
-   magrittr
+   magrittr,
+   openxlsx
