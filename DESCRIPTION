@@ -28,3 +28,6 @@ Imports:
    dplyr,
    magrittr,
    openxlsx
+Suggests:
+   HDF5Array,
+   rhdf5 
