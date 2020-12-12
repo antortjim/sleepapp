@@ -144,3 +144,17 @@ get_diff_tables <- function() {
   list.files(path = abs_dir, recursive = TRUE, pattern = "diff_table.csv")
 }
 
+
+#' Annotate mitochondrial genes
+#'
+#' Set the mitochondrial field of the gene metadata to true
+#' if `pattern` is found in the gene name
+#' @param pattern Character which if contained in a gene name signals it is a mitochondrial gene
+#' @details The mitochondria has its own genome and mitochondrial genes are encoded in this genome
+#' i.e. genes encoded in the nucleus but whose protein product travels to the mitochondria are NOT mitochondrial genes
+annotate_mitochondrial_genes <- function(sce, pattern="mt:") {
+  rowData(sce)$mitochondrial <- FALSE
+  rowData(sce)[grep(x = rownames(rowData(sce)), pattern = pattern,), "mitochondrial"] <- TRUE
+  return(sce)
+}
+
