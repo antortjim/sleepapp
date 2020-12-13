@@ -7,7 +7,7 @@
 #' via a config file
 #'
 #' @importFrom R6 R6Class
-#' @importFrom rjson fromJSON toJSON
+#' @importFrom jsonlite fromJSON toJSON
 #' @export
 #' @noRd
 SleepAppConfiguration <- R6::R6Class(classname = "FSLREthoConfiguration", public = list(
@@ -49,14 +49,14 @@ SleepAppConfiguration <- R6::R6Class(classname = "FSLREthoConfiguration", public
     content$assays_available = c("counts", "normcounts", "logcounts")
     content$groupings_available = c("Condition", "quick_clusters")
     content$root_dir = "/1TB/Cloud/Lab/Projects/SleepSignature/workflow/"
-    content$working_dir = "results/20201209/"
+    content$working_dir = "results/20201213/"
     content$abs_dir <- file.path(content$root_dir, content$working_dir)
     self$content <- content
     self$load()
   },
   
   save = function(config_file = NULL) {
-    json <- rjson::toJSON(self$content)
+    json <- jsonlite::toJSON(self$content)
     
     if (is.null(config_file))
       config_file <- self$config_file
@@ -67,7 +67,7 @@ SleepAppConfiguration <- R6::R6Class(classname = "FSLREthoConfiguration", public
   load = function() {
     if (!file.exists(self$config_file)) self$save()
     else {
-      json <- rjson::fromJSON(file = self$config_file)
+      json <- jsonlite::fromJSON(self$config_file)
       self$content <- modifyList(self$content, json)
     }
     

@@ -6,6 +6,7 @@
 #' @importFrom data.table fread
 #' @importFrom dplyr arrange
 readMAST <- function(path, signif_threshold=0.05, only_signif=FALSE) {
+  
   diff_table <- data.table::fread(file = path)
   diff_table <- diff_table[, c("Gene", "Coefficient", "Probability (Chisq)", "FDR (Adj-pval)")]
   colnames(diff_table) <- c("Gene", "effect.size", "significance", "corrected.significance")
@@ -46,12 +47,18 @@ readWilcoxon <- function(path, signif_threshold=0.05, only_signif=FALSE) {
 #' 
 #' @importFrom data.table fread
 #' @importFrom dplyr arrange
-readEdgeR <- function(path, signif_threshold=NULL, only_signif=FALSE) {
+readEdgeR <- function(path, signif_threshold=NULL, only_signif=FALSE, adjust=TRUE) {
   
   diff_table <- data.table::fread(file = path)
   diff_table <- diff_table[, c("gene", "logFC", "PValue", "PValue", "direction")]
   colnames(diff_table) <- c("Gene", "effect.size", "significance", "corrected.significance", "direction")
-  diff_table$signif <- diff_table$direction != 0
+  
+  if (adjust) {
+    diff_table$corrected.significance <- p.adjust(p = diff_table$significance, method = "fdr")
+    diff_table$signif <- diff_table$corrected.significance <= 0.05
+  } else {
+    diff_table$signif <- diff_table$direction != 0
+  }
   diff_table$direction <- NULL
   diff_table <- dplyr::arrange(diff_table, corrected.significance)
   

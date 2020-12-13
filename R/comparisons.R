@@ -104,12 +104,13 @@ keep_genes <- function(sce, genes) {
 #' * formats sample names
 #' @import scuttle
 #' @import SingleCellExperiment
+#' @import magrittr
 #' @export
-aggregate_cells <- function(sce, assay=c("normcounts", "counts"), pca_assay=c("normcounts", "logcounts")) {
+aggregate_cells <- function(sce, criteria, assay=c("normcounts", "counts")) {
   
   summed <- scuttle::aggregateAcrossCells(
     sce, 
-    id=colData(sce)[,bulk_column_criteria],    
+    id=colData(sce)[,criteria],    
     use.assay.type = assay
   )
   
@@ -130,7 +131,7 @@ aggregate_cells <- function(sce, assay=c("normcounts", "counts"), pca_assay=c("n
   summed <- scuttle::addPerCellQC(summed, assay.type=assay, subsets=list(Mito=is.mito))
   
   # give a nice sample name
-  summed$SampleName <- colData(summed)[,bulk_column_criteria]  %>%
+  summed$SampleName <- colData(summed)[,criteria]  %>%
     apply(., 1, function(x) {paste(x, collapse = "_")})
   
   # drop single cell (useless) columns
