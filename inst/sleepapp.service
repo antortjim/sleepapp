@@ -1,0 +1,16 @@
+[Unit]
+Description=Run sleepapp
+Wants=NetworkManager.service
+After=NetworkManager.service
+
+
+[Service]
+Type=simple
+WorkingDirectory=/1TB/Cloud/Lab/Projects/SleepSignature/workflow/sleepapp
+ExecStart=/home/vibflysleep/anaconda3/envs/R4.0.2/bin/R -e "sleepapp::main(port=8081)"
+RestartSec=5
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+
