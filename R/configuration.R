@@ -32,9 +32,9 @@ SleepAppConfiguration <- R6::R6Class(classname = "SleepAppConfiguration", public
     )
     content$methods_available = names(read_methods)
     content$assays_available = c("counts", "normcounts", "logcounts")
-    content$groupings_available = c("Condition", "quick_clusters")
+    content$groupings_available = c("Condition")#, "quick_clusters")
     content$root_dir = "/1TB/Cloud/Lab/Projects/SleepSignature/workflow/"
-    content$working_dir = "results/20201213/"
+    content$working_dir = "results/20201222/"
     content$abs_dir <- file.path(content$root_dir, content$working_dir)
     self$content <- content
     self$load()
