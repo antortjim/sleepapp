@@ -5,6 +5,7 @@
 #' 
 #' @importFrom data.table fread
 #' @importFrom dplyr arrange
+#' @export
 readMAST <- function(path, signif_threshold=0.05, only_signif=FALSE) {
   
   diff_table <- data.table::fread(file = path)
@@ -23,6 +24,7 @@ readMAST <- function(path, signif_threshold=0.05, only_signif=FALSE) {
 
 #' @importFrom data.table fread
 #' @importFrom dplyr arrange
+#' @export
 readWilcoxon <- function(path, signif_threshold=0.05, only_signif=FALSE) {
   
   diff_table <- data.table::fread(file = path)
@@ -47,6 +49,7 @@ readWilcoxon <- function(path, signif_threshold=0.05, only_signif=FALSE) {
 #' 
 #' @importFrom data.table fread
 #' @importFrom dplyr arrange
+#' @export
 readEdgeR <- function(path, signif_threshold=NULL, only_signif=FALSE, adjust=TRUE) {
   
   diff_table <- data.table::fread(file = path)
@@ -71,6 +74,7 @@ readEdgeR <- function(path, signif_threshold=NULL, only_signif=FALSE, adjust=TRU
 
 #' @importFrom data.table fread
 #' @importFrom dplyr arrange
+#' @export
 readDESeq <- function(path, signif_threshold=0.05, only_signif=FALSE) {
 
   diff_table <- data.table::fread(file = path)
@@ -102,7 +106,9 @@ readSCVI_vanilla <- function(path, signif_threshold=0.05, only_signif=FALSE) {
   
 }
 
-
+#' @importFrom data.table fread
+#' @importFrom dplyr arrange
+#' @export
 readSCVI_change <- function(path, signif_threshold=0.05, only_signif=FALSE) {
   diff_table <- data.table::fread(file=path)
   diff_table <- diff_table[, c("Gene", "lfc_median", "proba_not_de", "proba_not_de")]

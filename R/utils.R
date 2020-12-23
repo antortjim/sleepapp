@@ -77,6 +77,7 @@ export_sheet <- function(output_folder) {
   
 #' @importFrom glue glue
 #' @import magrittr
+#' @export
 build_diff_table_path <- function(cell_type, method, comparison, grouping="", assay="") {
   
   if (method == "scvi") {
