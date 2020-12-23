@@ -62,7 +62,7 @@ label_cells <- function(sce, comparison_file, remove=TRUE) {
   comparison <- readComparisonFile(comparison_file)
   
   cells_passed <- lapply(1:nrow(comparison), function(i) {
-    match_group(as.data.frame(colData(sce)), comparison[i, ])
+    match_group(sce, comparison[i, ])  
   })
   names(cells_passed) <- comparison$experiment_
   cell_indices <- Reduce(`|`, cells_passed)

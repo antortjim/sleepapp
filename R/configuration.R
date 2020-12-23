@@ -8,34 +8,20 @@
 #'
 #' @importFrom R6 R6Class
 #' @importFrom jsonlite fromJSON toJSON
+#' @import magrittr
 #' @export
 #' @noRd
-SleepAppConfiguration <- R6::R6Class(classname = "FSLREthoConfiguration", public = list(
+SleepAppConfiguration <- R6::R6Class(classname = "SleepAppConfiguration", public = list(
   
   content = list(),
   config_file = "",
 
 
-  initialize = function(config_file = "/etc/fslretho.conf") {
+  initialize = function(config_file = "/etc/sleepapp.conf") {
     
     content <- list("debug" = TRUE, "ncores" = 2, "stop_backups" = TRUE, port = 3838)
-    content$folders <- list(
-      "dam" = list(
-        "path" = "/DAM_data/results",
-        "description" = "A path to a folder containing MonitorXX.txt files"
-      ),
-      "ethoscope" = list(
-        "path" = "/ethoscope_data/results",
-        "description" = "A path to a folder containing an ethoscope database of sqlite3 files"
-      ),
-      "ethoscope_cache" = list(
-        "path" = "/ethoscope_data/cache",
-        "description" = "A path to a folder containing rds files for fast reloading of data loaded in a previous run"
-      )
-    )
     self$config_file <- config_file
     content$content <- content
-    # content$read_methods = read_methods
     content$cell_types <- list(
       "γ KC" = "y_KCs",
       "αβ KC" = "a_b_KCs",
@@ -44,7 +30,6 @@ SleepAppConfiguration <- R6::R6Class(classname = "FSLREthoConfiguration", public
       "Ensheathing Glia" = "Ensheathing_Glia",
       "Surface Glia" = "Surface_Glia"
     )
-    content$comparisons_available = gsub(x = list.files("../comparisons/"), pattern = "\\.csv", replacement = "")
     content$methods_available = names(read_methods)
     content$assays_available = c("counts", "normcounts", "logcounts")
     content$groupings_available = c("Condition", "quick_clusters")
@@ -54,7 +39,9 @@ SleepAppConfiguration <- R6::R6Class(classname = "FSLREthoConfiguration", public
     self$content <- content
     self$load()
   },
-  
+  comparisons_available = function() {
+     file.path(self$content$root_dir, "comparisons") %>% list.files %>% gsub(x = ., pattern = "\\.csv", replacement = "")
+  },
   save = function(config_file = NULL) {
     json <- jsonlite::toJSON(self$content)
     

@@ -10,7 +10,7 @@ parseMethod <- function(path) {
 #' Given a path, parse the comparison it belongs to
 #' @importFrom stringr str_match
 parseComparison <- function(path) {
-  res <- stringr::str_match(string = path, pattern = "comparison-(.*vs.*)_(Condition)?_diff_table.csv")[,2]
+  res <- stringr::str_match(string = path, pattern = "comparison-(.*vs.*)_(grouping-Condition)?_diff_table.csv")[,2]
   if (is.na(res)) res <- stringr::str_match(string = path, pattern = "comparison-(.*vs.*)_diff_table.csv")[,2]
   return(res)
 }

@@ -26,11 +26,12 @@ export_sheet <- function(output_folder) {
     dir.create(output_folder)
   }
     
-  config <- SleepAppConfiguration$new()$content
+  conf <- SleepAppConfiguration$new()
+  config <- conf$content
   
   cell_types <- config$cell_types
   assays_available <- config$assays_available
-  comparisons_available <- config$comparisons_available
+  comparisons_available <- conf$comparisons_available()
   groupings_available <- config$groupings_available
   methods_available <- config$methods_available
   
