@@ -1,6 +1,20 @@
 helper_text <- list(
-  "histogram" = "Distribution of detected counts of a list of gene(s) across two groups of cells given by a comparison",
-  "volcano" = "Estimated effect size and significance of change for all assayed genes across two groups of cells given by a comparison"
+  "histogram" = div(
+    tags$h2("Distribution of detected counts of a list of gene(s) across two groups of cells given by a comparison"),
+    
+    "Visualize in a histogram or a density plot what's the counts distribution for the same set of genes across two groups of cells.
+    A Differentially Expressed Gene will display two distributions with either different shape or different heights or both",
+    "Gene names should be separated by , without spaces between them",
+    "Genes that are not typed exactly as used in database are dropped without warning."
+  )
+  ,
+  "volcano" = div(
+    tags$h2("Estimated effect size and significance of change for all assayed genes across two groups of cells given by a comparison"),
+    tags$b("Known issues"),
+    "Make sure the labels box has a number on it and it's not just blank",
+    "scvi only has counts assay",
+    "You may have to press submit twice to get your volcano plot. But it should take a couple of seconds to run!"
+  )
 )
 
 
